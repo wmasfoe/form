@@ -31,7 +31,7 @@ async function asyncRegisterComponent(factory: ComponentFactory, name: string) {
     // 组件
     factory.register(name, defineAsyncComponent(() => import('element-plus').then((module) => module?.[compName] as Component)));
     // 样式
-    // import(`element-plus/lib/theme-chalk/el-${name}.css`);
+    // import(`element-plus/theme-chalk/el-${name}.css`);
   } catch(e: any) {
     console.error(e);
   }

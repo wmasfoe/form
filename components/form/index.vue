@@ -14,6 +14,7 @@
         <component
           :is="item.component"
           :name="item.field"
+          :value="item.props?.defaultValue"
           v-bind="item.props"
         />
         <template #fallback>
@@ -45,15 +46,27 @@ const componentFactory = useComponentFactory()
 const props = withDefaults(
   defineProps<{
     config: FormConfig
+    modelValue: NormalObject
   }>(),
   {
     config: () => [],
+    modelValue: () => ({}),
   }
 )
-const emit = defineEmits(['submit', 'validatorSuccess', 'validatorError'])
+const emit = defineEmits(['submit', 'validatorSuccess', 'validatorError', 'update:modelValue'])
 
 const formRef = ref(null)
 const formModel = ref<NormalObject>({})
+
+// 有bug导致死循环
+// const formModel = computed({
+//   set(v) {
+//     emit('update:modelValue', v)
+//   },
+//   get() {
+//     return props.modelValue
+//   },
+// })
 
 watch(() => props.config, () => {
   props.config.forEach((item) => {

@@ -6,12 +6,19 @@ import LightningForm from '../components/form/index.vue'
 import MyInput from './component/MyInput.vue'
 const MyInputLazy = defineAsyncComponent(() => import('./component/MyInput.vue'))
 
+const model = ref({
+  name: '火麒麟',
+  age: 15,
+})
+
 const config = computed(() => [
   {
     field: 'name',
     label: '名字',
     component: 'input',
-    props: {},
+    props: {
+      defaultValue: model.value.name,
+    },
     rules: [
       { required: true, message: 'Please input Activity name', trigger: 'blur' },
       { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
@@ -21,12 +28,27 @@ const config = computed(() => [
     field: 'age',
     label: '年龄',
     component: 'input',
-    props: {},
+    props: {
+      defaultValue: model.value.age,
+    },
     rules: [
       { required: true, message: 'Please input Activity age', trigger: 'blur' },
-      { min: 3, max: 5, message: 'Length should be 1 to 2', trigger: 'blur' },
     ],
   },
+  // {
+  //   field: 'sex',
+  //   label: '性别',
+  //   component: 'radioGroup',
+  //   props: {
+  //     options: [
+  //       { label: '男', value: 1 },
+  //       { label: '女', value: 2 },
+  //     ],
+  //   },
+  //   rules: [
+  //     { required: true, message: 'Please input Activity sex', trigger: 'blur' },
+  //   ],
+  // },
   {
     field: 'myInput',
     label: '自定义组件',
@@ -52,7 +74,7 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <LightningForm :config="config" />
+  <LightningForm v-model="model" :config="config" />
 
   <hr>
 
