@@ -1,30 +1,51 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { computed } from 'vue'
+import 'element-plus/dist/index.css'
+import { ElForm, ElFormItem, ElInput } from 'element-plus'
+import LightningForm from '../components/form/index.vue'
+import MyInput from './component/MyInput.vue'
+
+const config = computed(() => [
+  {
+    field: 'name',
+    label: '名字',
+    component: 'input',
+    props: {},
+    rules: [],
+  },
+  {
+    field: 'age',
+    label: '年龄',
+    component: 'input',
+    props: {},
+    rules: [],
+  },
+  {
+    field: 'myInput',
+    label: '自定义组件',
+    component: MyInput,
+    props: {
+      title: '这是自定义的 input 噢',
+    },
+  }
+])
+
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <LightningForm :config="config" />
+
+  <hr>
+
+  <ElForm>
+    <ElFormItem label="名字">
+      <ElInput />
+    </ElFormItem>
+    <ElFormItem label="年龄">
+      <ElInput />
+    </ElFormItem>
+  </ElForm>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
 </style>
