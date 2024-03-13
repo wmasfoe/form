@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, Suspense, defineAsyncComponent } from 'vue'
 import 'element-plus/dist/index.css'
 import { ElForm, ElFormItem, ElInput } from 'element-plus'
 import LightningForm from '../components/form/index.vue'
 import MyInput from './component/MyInput.vue'
+const MyInputLazy = defineAsyncComponent(() => import('./component/MyInput.vue'))
 
 const config = computed(() => [
   {
@@ -43,6 +44,14 @@ const config = computed(() => [
     </ElFormItem>
     <ElFormItem label="年龄">
       <ElInput />
+    </ElFormItem>
+    <ElFormItem label="自定义组件">
+      <Suspense>
+        <MyInputLazy />
+        <template #fallback>
+          Loading...
+        </template>
+      </Suspense>
     </ElFormItem>
   </ElForm>
 </template>

@@ -1,6 +1,6 @@
 import { Component } from 'vue'
 
-type SupportComponent = 'input' | 'select' | 'radio' | 'checkbox' | 'textarea' | 'cascader'
+export type SupportComponent = 'input' | 'select' | 'radio' | 'checkbox' | 'textarea' | 'cascader'
 type NormalObject = Record<string | symbol, any>
 
 export interface FormConfigItem {
