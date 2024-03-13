@@ -1,13 +1,19 @@
 import { Component } from 'vue'
 
 export type SupportComponent = 'input' | 'select' | 'radio' | 'checkbox' | 'textarea' | 'cascader'
-type NormalObject = Record<string | symbol, any>
+export type NormalObject = Record<string | symbol, any>
+
+export interface CompProps {
+  defaultValue?: any;
+  modelValue?: any;
+  [key: string]: any;
+}
 
 export interface FormConfigItem {
   field: string;
   label: string;
   component: SupportComponent | Component;
-  props?: NormalObject;
+  props?: NormalObject | CompProps;
   rules?: NormalObject[];
   [key: string]: any;
 }
