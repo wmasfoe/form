@@ -1,28 +1,26 @@
 <template>
   <div>
     {{ $props.title }}
-    <input v-model="inputValue" type="text" placeholder="Enter text" class="my-input">
+    <input v-bind="attrs" v-model="modelValue" type="text" placeholder="Enter text" class="my-input">
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    title: String,
-    default: '这是自定义的 input 噢'
-  },
-  data() {
-    return {
-      inputValue: ''
-    };
-  },
-  methods: {
-    submit() {
-      // Handle form submission logic here
-      console.log('Submitted:', this.inputValue);
-    }
+<script setup lang="ts">
+import useCustomComp from '../../components/form/customComp'
+const props = withDefaults(
+  defineProps<{
+    modelValue: any;
+    title: string;
+  }>(), {
+    title: '这是自定义的 input 噢'
   }
-};
+)
+
+const emit = defineEmits(['update:modelValue'])
+const { modelValue, attrs } = useCustomComp({
+  props,
+  emit
+})
 </script>
 
 <style scoped>

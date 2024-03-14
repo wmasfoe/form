@@ -26,6 +26,11 @@
     </ElFormItem>
     <ElFormItem>
       <ElButton
+        @click="handleReset"
+      >
+        重置
+      </ElButton>
+      <ElButton
         type="primary"
         @click="handleSubmit"
       >
@@ -36,8 +41,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, withDefaults, computed, Suspense, ref, watch } from 'vue'
-import { ElForm, ElFormItem, ElButton } from 'element-plus'
+import { defineProps, withDefaults, computed, Suspense, ref, onMounted } from 'vue'
+import { ElForm, ElFormItem, ElButton, FormInstance } from 'element-plus'
+import { cloneDeep } from 'lodash-es'
 import { useComponentFactory, useElementPlusComponents } from '../utils'
 import { FormConfig, NormalObject } from './typing'
 import Fallback from './Fallback.vue'
@@ -56,10 +62,10 @@ const props = withDefaults(
 )
 const emit = defineEmits(['submit', 'validatorSuccess', 'validatorError', 'update:modelValue'])
 
-const formRef = ref(null)
+const formRef = ref<FormInstance | null>(null)
 
 // 表单绑定的值
-const formModel = computed({
+const formModel = computed<Record<string, any>>({
   set(v) {
     emit('update:modelValue', v)
   },
@@ -70,20 +76,37 @@ const formModel = computed({
 
 const usingConfig = computed(() => props.config.map((item) => {
   const { component } = item
-  // string 代表是已经内部支持的组件，注册到 componentFactory 中
-  if(typeof component === 'string') {
+  // string 代表是内部支持的组件库组件，注册到 componentFactory 中
+  const isCustomComp = typeof component === 'string'
+
+  if(isCustomComp) {
     useElementPlusComponents(componentFactory, component)
   }
   return {
     ...item,
-    component: typeof component === 'string' ? componentFactory.get(component) : component,
+    isCustomComp,
+    component: isCustomComp ? componentFactory.get(component) : component,
   }
 }))
 
+// 缓存默认值
+const initFormModel: Record<string, any> = {}
+onMounted(() => {
+  for (const it in formModel.value) {
+    initFormModel[it] = formModel.value[it]
+  }
+})
+const handleReset = () => {
+  formRef.value?.resetFields()
+  formModel.value = cloneDeep(initFormModel)
+}
+
 const handleSubmit = () => {
   emit('submit', formModel.value)
-  formRef.value.validate((valid: boolean) => {
-    if (valid) {
+  formRef.value?.validate((valid: boolean) => {
+    // 调用自定义组件的 validate 方法
+    const usingValid = valid
+    if (usingValid) {
       emit('validatorSuccess', formModel.value)
       console.log('submit!')
     } else {
@@ -91,7 +114,7 @@ const handleSubmit = () => {
       console.log('error submit!!')
     }
 
-    return valid
+    return usingValid
   })
 }
 </script>

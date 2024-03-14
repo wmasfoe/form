@@ -6,7 +6,9 @@ import LightningForm from '../components/form/index.vue'
 import MyInput from './component/MyInput.vue'
 const MyInputLazy = defineAsyncComponent(() => import('./component/MyInput.vue'))
 
-const model = ref({})
+const model = ref({
+  name: 'xxx'
+})
 
 const config = computed(() => [
   {
@@ -51,6 +53,9 @@ const config = computed(() => [
     props: {
       title: '这是自定义的 input 噢',
     },
+    rules: [
+      { required: true, message: 'Please input Activity myInput', trigger: 'blur' },
+    ],
   }
 ])
 
