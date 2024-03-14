@@ -5,6 +5,7 @@
   >
     <ElFormItem
       v-for="item in usingConfig"
+      :ref="(v: any) => getRefs(v, item.field)"
       :key="item.field"
       :label="item.label"
       :prop="item.field"
@@ -41,8 +42,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, withDefaults, computed, Suspense, ref, onMounted } from 'vue'
-import { ElForm, ElFormItem, ElButton, FormInstance } from 'element-plus'
+import { defineProps, withDefaults, computed, Suspense, ref, onMounted, watch } from 'vue'
+import { ElForm, ElFormItem, ElButton, FormInstance, FormItemInstance } from 'element-plus'
 import { cloneDeep } from 'lodash-es'
 import { useComponentFactory, useElementPlusComponents } from '../utils'
 import { FormConfig, NormalObject } from './typing'
@@ -63,6 +64,10 @@ const props = withDefaults(
 const emit = defineEmits(['submit', 'validatorSuccess', 'validatorError', 'update:modelValue'])
 
 const formRef = ref<FormInstance | null>(null)
+const formItemRefs = ref<Record<string, FormItemInstance>>({})
+const getRefs = (el: FormItemInstance, key: string) => {
+  formItemRefs.value[key] = el
+}
 
 // 表单绑定的值
 const formModel = computed<Record<string, any>>({
