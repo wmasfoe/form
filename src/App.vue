@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { computed, Suspense, defineAsyncComponent, ref } from 'vue'
 import 'element-plus/dist/index.css'
-import { ElForm, ElFormItem, ElInput } from 'element-plus'
+import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus'
 import LightningForm from '../components/form/index.vue'
 import MyInput from './component/MyInput.vue'
 const MyInputLazy = defineAsyncComponent(() => import('./component/MyInput.vue'))
 
-const model = ref({
-  name: '火麒麟',
-  age: 15,
-})
+const model = ref({})
 
 const config = computed(() => [
   {
@@ -17,7 +14,6 @@ const config = computed(() => [
     label: '名字',
     component: 'input',
     props: {
-      defaultValue: model.value.name,
     },
     rules: [
       { required: true, message: 'Please input Activity name', trigger: 'blur' },
@@ -29,7 +25,6 @@ const config = computed(() => [
     label: '年龄',
     component: 'input',
     props: {
-      defaultValue: model.value.age,
     },
     rules: [
       { required: true, message: 'Please input Activity age', trigger: 'blur' },
@@ -75,6 +70,7 @@ const handleSubmit = () => {
 
 <template>
   <LightningForm v-model="model" :config="config" />
+  <ElButton @click="console.log('model', model)">点我打印model</ElButton>
 
   <hr>
 

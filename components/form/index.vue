@@ -14,12 +14,12 @@
         <component
           :is="item.component"
           :name="item.field"
-          :value="item.props?.defaultValue"
           v-bind="item.props"
+          v-model="formModel[item.field]"
         />
         <template #fallback>
           <slot name="async-item-loading">
-            Loading...
+            <Fallback />
           </slot>
         </template>
       </Suspense>
@@ -40,6 +40,7 @@ import { defineProps, withDefaults, computed, Suspense, ref, watch } from 'vue'
 import { ElForm, ElFormItem, ElButton } from 'element-plus'
 import { useComponentFactory, useElementPlusComponents } from '../utils'
 import { FormConfig, NormalObject } from './typing'
+import Fallback from './Fallback.vue'
 
 const componentFactory = useComponentFactory()
 
@@ -56,24 +57,15 @@ const props = withDefaults(
 const emit = defineEmits(['submit', 'validatorSuccess', 'validatorError', 'update:modelValue'])
 
 const formRef = ref(null)
-const formModel = ref<NormalObject>({})
 
-// 有bug导致死循环
-// const formModel = computed({
-//   set(v) {
-//     emit('update:modelValue', v)
-//   },
-//   get() {
-//     return props.modelValue
-//   },
-// })
-
-watch(() => props.config, () => {
-  props.config.forEach((item) => {
-    formModel.value[item.field] = item.props?.defaultValue || ''
-  })
-}, {
-  immediate: true
+// 表单绑定的值
+const formModel = computed({
+  set(v) {
+    emit('update:modelValue', v)
+  },
+  get() {
+    return props.modelValue
+  },
 })
 
 const usingConfig = computed(() => props.config.map((item) => {
