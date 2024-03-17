@@ -71,9 +71,15 @@ const handleSubmit = () => {
   })
 }
 
+const handleBlur = () => {
+  console.log('blur')
+}
+
 </script>
 
 <template>
+
+  <hr>
   <LightningForm v-model="model" :config="config" />
   <ElButton @click="console.log('model', model)">点我打印model</ElButton>
 

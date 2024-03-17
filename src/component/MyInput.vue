@@ -1,11 +1,12 @@
 <template>
   <div>
     {{ $props.title }}
-    <input v-bind="attrs" v-model="modelValue" type="text" placeholder="Enter text" class="my-input">
+    <ElInput v-bind="attrs" v-model="modelValue" type="text" placeholder="Enter text" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ElInput } from 'element-plus'
 import useCustomComp from '../../components/form/customComp'
 const props = withDefaults(
   defineProps<{

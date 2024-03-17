@@ -12,12 +12,14 @@
       :rules="item.rules"
     >
       <Suspense>
-        <component
-          :is="item.component"
-          :name="item.field"
-          v-bind="item.props"
-          v-model="formModel[item.field]"
-        />
+        <CustomCompWrap :disable="!item.isCustomComp">
+          <component
+            :is="item.component"
+            :name="item.field"
+            v-bind="item.props"
+            v-model="formModel[item.field]"
+          />
+        </CustomCompWrap>
         <template #fallback>
           <slot name="async-item-loading">
             <Fallback />
@@ -48,6 +50,7 @@ import { cloneDeep } from 'lodash-es'
 import { useComponentFactory, useElementPlusComponents } from '../utils'
 import { FormConfig, NormalObject } from './typing'
 import Fallback from './Fallback.vue'
+import CustomCompWrap from './CustomCompWrap.vue'
 
 const componentFactory = useComponentFactory()
 
